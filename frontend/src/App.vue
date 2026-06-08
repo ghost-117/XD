@@ -1,5 +1,6 @@
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue'
+import { fallbackCatalog } from './fallbackCatalog'
 
 const emptyProductForm = () => ({
   id: null,
@@ -101,6 +102,13 @@ async function loadProducts() {
     const query = search.value ? `?search=${encodeURIComponent(search.value)}` : ''
     const payload = await api(`/products${query}`)
     products.value = payload.data
+  } catch (error) {
+    const term = search.value.trim().toLowerCase()
+    products.value = fallbackCatalog.filter((product) => {
+      if (!term) return true
+      return `${product.name} ${product.description} ${product.category?.name || ''} ${product.brand || ''}`.toLowerCase().includes(term)
+    })
+    setMessage('Backend apagado: se cargo el catalogo local para que las prendas aparezcan.', 'warning')
   } finally {
     loading.value = false
   }
@@ -115,7 +123,7 @@ async function loadAdmin() {
 function imageUrl(path) {
   if (!path) return 'https://images.unsplash.com/photo-1523381294911-8d3cead13475?w=800'
   if (path.startsWith('http')) return path
-  return `http://127.0.0.1:8001/${path}`
+  return `/${path}`
 }
 
 function addToCart(product) {
