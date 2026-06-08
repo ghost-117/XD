@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -49,17 +50,29 @@ class ProductController extends Controller
 
     private function validatedData(Request $request): array
     {
-        return $request->validate([
+        $data = $request->validate([
             'category_id' => ['nullable', 'exists:categories,id'],
             'name' => ['required', 'string', 'max:150'],
             'description' => ['nullable', 'string'],
-            'price' => ['required', 'numeric', 'min:0'],
+            'price' => ['required', 'numeric', 'min:0.01'],
             'image_path' => ['nullable', 'string', 'max:255'],
+            'image' => ['nullable', 'image', 'mimes:png,jpg,jpeg', 'max:4096'],
             'is_available' => ['boolean'],
-            'stock' => ['integer', 'min:0'],
+            'stock' => ['required', 'integer', 'min:0'],
             'sizes' => ['nullable', 'array'],
             'sizes.*' => ['string', 'max:10'],
             'brand' => ['nullable', 'string', 'max:100'],
         ]);
+
+        unset($data['image']);
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $filename = time().'_'.Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)).'.'.$file->extension();
+            $file->move(public_path('uploads'), $filename);
+            $data['image_path'] = 'uploads/'.$filename;
+        }
+
+        return $data;
     }
 }

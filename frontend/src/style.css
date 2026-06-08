@@ -56,6 +56,19 @@ select {
   padding: 10px 12px;
 }
 
+label {
+  display: grid;
+  gap: 6px;
+  color: #e8d59d;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+input[type="file"] {
+  padding-top: 9px;
+}
+
 textarea {
   min-height: 88px;
   resize: vertical;
@@ -122,6 +135,31 @@ textarea {
   background: rgba(216, 183, 95, 0.1);
   margin: 0 0 18px;
   padding: 12px 14px;
+}
+
+.notice.success {
+  border-color: rgba(95, 216, 150, 0.35);
+  background: rgba(95, 216, 150, 0.12);
+}
+
+.notice.warning {
+  border-color: rgba(255, 190, 92, 0.45);
+  background: rgba(255, 190, 92, 0.12);
+}
+
+.notice.error,
+.field-error {
+  color: #ffb1a8;
+}
+
+.notice.error {
+  border-color: rgba(255, 120, 102, 0.45);
+  background: rgba(255, 120, 102, 0.12);
+}
+
+.field-error {
+  font-size: 13px;
+  margin: -6px 0 0;
 }
 
 .hero {
@@ -237,6 +275,17 @@ h2 {
   min-width: 42px;
   padding: 5px 8px;
   text-align: center;
+}
+
+.card-actions,
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.card-actions button {
+  flex: 1 1 140px;
 }
 
 .cart-page,
