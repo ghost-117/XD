@@ -8,14 +8,19 @@ use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
 class OrderController extends Controller
 {
+    private const ADMIN_EMAIL = 'Ig1613822@gmail.com';
+
     public function index(): JsonResponse
     {
+        $this->authorizeAdmin(request());
+
         $orders = Order::with(['items.product:id,name,image_path', 'user:id,name,email'])
             ->orderByDesc('created_at')
             ->get();
@@ -89,6 +94,8 @@ class OrderController extends Controller
 
     public function updateStatus(Request $request, Order $order): JsonResponse
     {
+        $this->authorizeAdmin($request);
+
         $data = $request->validate([
             'status' => ['required', Rule::in(['Pendiente', 'En Proceso', 'Entregado'])],
         ]);
@@ -100,6 +107,8 @@ class OrderController extends Controller
 
     public function summary(): JsonResponse
     {
+        $this->authorizeAdmin(request());
+
         return response()->json([
             'data' => [
                 'pending' => Order::where('status', 'Pendiente')->count(),
@@ -109,5 +118,14 @@ class OrderController extends Controller
                 'products' => Product::count(),
             ],
         ]);
+    }
+
+    private function authorizeAdmin(Request $request): void
+    {
+        abort_unless(
+            strtolower($request->header('X-User-Email', '')) === strtolower(self::ADMIN_EMAIL),
+            Response::HTTP_FORBIDDEN,
+            'Solo el administrador puede usar el panel.',
+        );
     }
 }

@@ -11,6 +11,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
 Route::get('/products', [ProductController::class, 'index']);
+Route::get('/categories', [ProductController::class, 'categories']);
 Route::post('/orders', [OrderController::class, 'store']);
 
 Route::prefix('admin')->group(function (): void {

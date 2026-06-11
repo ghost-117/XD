@@ -31,13 +31,15 @@ class DatabaseSeeder extends Seeder
         ]);
 
         User::create([
-            'name' => 'Itzel',
-            'email' => 'admin@shopholy.test',
-            'password' => Hash::make('admin1234'),
+            'name' => 'Administrador',
+            'email' => 'Ig1613822@gmail.com',
+            'password' => Hash::make('12345678'),
             'role' => 'admin',
             'is_active' => true,
         ]);
 
+        $faldas = Category::create(['name' => 'Faldas']);
+        $blusas = Category::create(['name' => 'Blusas']);
         $camisetas = Category::create(['name' => 'Camisetas']);
         $sudaderas = Category::create(['name' => 'Sudaderas']);
         $pantalones = Category::create(['name' => 'Pantalones']);
@@ -50,15 +52,15 @@ class DatabaseSeeder extends Seeder
             [$pantalones->id, 'Jeans Azul', 'Jeans clásico azul, corte baggy, tela stretch.', 399, 'uploads/1765572872_jeans.jpg', 9, ['S', 'M', 'L', 'XL'], null],
             [$accesorios->id, 'Gorra Negra Street', 'Gorra negra estilo urbano, diseño bordado frontal.', 180, 'uploads/1765574395_GORRA.jpg', 15, ['Unitalla'], null],
             [$camisetas->id, 'Playera Gráfica Anime', 'Playera de algodón con estampado inspirado en estética anime.', 250, 'uploads/1765574444_anime.jpg', 10, ['XS', 'S', 'M', 'L'], null],
-            [$camisetas->id, 'Top Deportivo Rosa', 'Top ligero y transpirable para entrenamiento o uso casual.', 220, 'uploads/1765574461_top.jpg', 7, ['S', 'M', 'L'], null],
+            [$blusas->id, 'Top Deportivo Rosa', 'Top ligero y transpirable para entrenamiento o uso casual.', 220, 'uploads/1765574461_top.jpg', 7, ['S', 'M', 'L'], null],
             [$pantalones->id, 'Shorts Deportivos Unisex', 'Short deportivo cómodo con tela fresca.', 210, 'uploads/1765574545_shorts.jpg', 11, ['S', 'M', 'L', 'XL'], null],
             [$accesorios->id, 'Mochila Urbana Negra', 'Mochila resistente con bolsillos múltiples y estilo urbano.', 550, 'uploads/1765574568_mochila.jpg', 4, ['Unitalla'], null],
             [$sudaderas->id, 'Chamarra Rompevientos Azul', 'Rompevientos ligero resistente al agua, ideal para clima fresco.', 480, 'uploads/1765574586_rompevientos.jpg', 5, ['M', 'L', 'XL'], null],
             [$pantalones->id, 'Joggers Grises', 'Joggers unisex color gris, cómodos y combinables.', 330, 'uploads/1765574663_joggers .jpg', 8, ['S', 'M', 'L'], null],
-            [$camisetas->id, 'Blusa Casual Beige', 'Blusa suave con corte relajado y color beige clásico.', 260, 'uploads/1765574685_camisa.jpg', 9, ['S', 'M', 'L'], null],
+            [$blusas->id, 'Blusa Casual Beige', 'Blusa suave con corte relajado y color beige clásico.', 260, 'uploads/1765574685_camisa.jpg', 9, ['S', 'M', 'L'], null],
             [$accesorios->id, 'Cinturón Negro Clásico', 'Cinturón de piel sintética color negro, hebilla metálica.', 150, 'uploads/1765574706_cinturon.jpg', 20, ['Unitalla'], null],
             [$sudaderas->id, 'Hoodie Rosa Pastel', 'Hoodie unisex color rosa pastel con bolsas frontales.', 470, 'uploads/1765574761_hoddie.jpg', 7, ['S', 'M', 'L', 'XL', 'XXL'], null],
-            [$pantalones->id, 'Falda Plisada Negra', 'Falda juvenil plisada color negro, tela ligera y cómoda.', 320, 'uploads/1765574781_falda.jpg', 6, ['XS', 'S', 'M'], null],
+            [$faldas->id, 'Falda Plisada Negra', 'Falda juvenil plisada color negro, tela ligera y cómoda.', 320, 'uploads/1765574781_falda.jpg', 6, ['XS', 'S', 'M'], null],
         ])->map(fn (array $row) => Product::create([
             'category_id' => $row[0],
             'name' => $row[1],

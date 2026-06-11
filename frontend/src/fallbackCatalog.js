@@ -1,7 +1,7 @@
 export const fallbackCatalog = [
   {
     id: 1,
-    category: { name: 'Camisetas' },
+    category: { id: 4, name: 'Camisetas' },
     name: 'Camisa Oversize Blanca',
     description: 'Camisa unisex estilo oversize en tela suave, ideal para outfits callejeros.',
     price: 299,
@@ -12,7 +12,7 @@ export const fallbackCatalog = [
   },
   {
     id: 2,
-    category: { name: 'Sudaderas' },
+    category: { id: 5, name: 'Sudaderas' },
     name: 'Sudadera Negra',
     description: 'Sudadera negra con diseno minimalista, comoda y ligera.',
     price: 450,
@@ -22,7 +22,7 @@ export const fallbackCatalog = [
   },
   {
     id: 3,
-    category: { name: 'Pantalones' },
+    category: { id: 3, name: 'Pantalones' },
     name: 'Pantalon Cargo Arena',
     description: 'Pantalon cargo color arena con multiples bolsas y ajuste en tobillos.',
     price: 520,
@@ -32,7 +32,7 @@ export const fallbackCatalog = [
   },
   {
     id: 4,
-    category: { name: 'Pantalones' },
+    category: { id: 3, name: 'Pantalones' },
     name: 'Jeans Azul',
     description: 'Jeans clasico azul, corte baggy, tela stretch.',
     price: 399,
@@ -42,7 +42,7 @@ export const fallbackCatalog = [
   },
   {
     id: 5,
-    category: { name: 'Accesorios' },
+    category: { id: 6, name: 'Accesorios' },
     name: 'Gorra Negra Street',
     description: 'Gorra negra estilo urbano, diseno bordado frontal.',
     price: 180,
@@ -52,7 +52,7 @@ export const fallbackCatalog = [
   },
   {
     id: 6,
-    category: { name: 'Camisetas' },
+    category: { id: 4, name: 'Camisetas' },
     name: 'Playera Grafica Anime',
     description: 'Playera de algodon con estampado inspirado en estetica anime.',
     price: 250,
@@ -62,7 +62,7 @@ export const fallbackCatalog = [
   },
   {
     id: 7,
-    category: { name: 'Camisetas' },
+    category: { id: 2, name: 'Blusas' },
     name: 'Top Deportivo Rosa',
     description: 'Top ligero y transpirable para entrenamiento o uso casual.',
     price: 220,
@@ -72,7 +72,7 @@ export const fallbackCatalog = [
   },
   {
     id: 8,
-    category: { name: 'Pantalones' },
+    category: { id: 3, name: 'Pantalones' },
     name: 'Shorts Deportivos Unisex',
     description: 'Short deportivo comodo con tela fresca.',
     price: 210,
@@ -82,7 +82,7 @@ export const fallbackCatalog = [
   },
   {
     id: 9,
-    category: { name: 'Accesorios' },
+    category: { id: 6, name: 'Accesorios' },
     name: 'Mochila Urbana Negra',
     description: 'Mochila resistente con bolsillos multiples y estilo urbano.',
     price: 550,
@@ -92,7 +92,7 @@ export const fallbackCatalog = [
   },
   {
     id: 10,
-    category: { name: 'Sudaderas' },
+    category: { id: 5, name: 'Sudaderas' },
     name: 'Chamarra Rompevientos Azul',
     description: 'Rompevientos ligero resistente al agua, ideal para clima fresco.',
     price: 480,
@@ -102,7 +102,7 @@ export const fallbackCatalog = [
   },
   {
     id: 11,
-    category: { name: 'Pantalones' },
+    category: { id: 3, name: 'Pantalones' },
     name: 'Joggers Grises',
     description: 'Joggers unisex color gris, comodos y combinables.',
     price: 330,
@@ -112,7 +112,7 @@ export const fallbackCatalog = [
   },
   {
     id: 12,
-    category: { name: 'Camisetas' },
+    category: { id: 2, name: 'Blusas' },
     name: 'Blusa Casual Beige',
     description: 'Blusa suave con corte relajado y color beige clasico.',
     price: 260,
@@ -122,7 +122,7 @@ export const fallbackCatalog = [
   },
   {
     id: 13,
-    category: { name: 'Accesorios' },
+    category: { id: 6, name: 'Accesorios' },
     name: 'Cinturon Negro Clasico',
     description: 'Cinturon de piel sintetica color negro, hebilla metalica.',
     price: 150,
@@ -132,7 +132,7 @@ export const fallbackCatalog = [
   },
   {
     id: 14,
-    category: { name: 'Sudaderas' },
+    category: { id: 5, name: 'Sudaderas' },
     name: 'Hoodie Rosa Pastel',
     description: 'Hoodie unisex color rosa pastel con bolsas frontales.',
     price: 470,
@@ -142,7 +142,7 @@ export const fallbackCatalog = [
   },
   {
     id: 15,
-    category: { name: 'Pantalones' },
+    category: { id: 1, name: 'Faldas' },
     name: 'Falda Plisada Negra',
     description: 'Falda juvenil plisada color negro, tela ligera y comoda.',
     price: 320,
