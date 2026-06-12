@@ -24,16 +24,12 @@ RUN composer run-script post-autoload-dump 2>/dev/null || true
 RUN chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
-RUN printf '<VirtualHost *:80>\n\
-    DocumentRoot /var/www/html/public\n\
-    <Directory /var/www/html/public>\n\
-        AllowOverride All\n\
-        Require all granted\n\
-    </Directory>\n\
-</VirtualHost>' > /etc/apache2/sites-available/000-default.conf
+RUN sed -i 's/Listen 80/Listen 10000/g' /etc/apache2/ports.conf
+
+RUN printf '<VirtualHost *:10000>\n    DocumentRoot /var/www/html/public\n    <Directory /var/www/html/public>\n        AllowOverride All\n        Require all granted\n    </Directory>\n</VirtualHost>' > /etc/apache2/sites-available/000-default.conf
 
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
 
-EXPOSE 80
+EXPOSE 10000
 CMD ["/start.sh"]
