@@ -1,19 +1,14 @@
 #!/bin/bash
 set -e
 
-# Asegurar que las carpetas existen
-mkdir -p /var/www/html/storage/framework/{cache,sessions,views}
-mkdir -p /var/www/html/bootstrap/cache
+mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views bootstrap/cache
+chmod -R 775 storage bootstrap/cache
 
-# Cambiar el dueño y permisos de manera recursiva
-chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
-chmod -R 777 /var/www/html/storage /var/www/html/bootstrap/cache
+php artisan optimize:clear
+php artisan migrate --force
 
-# Limpiar cache de configuración
-php /var/www/html/artisan optimize:clear
+if [ "${RUN_SEEDER:-false}" = "true" ]; then
+    php artisan db:seed --force
+fi
 
-# Ejecutar migraciones
-php /var/www/html/artisan migrate --force
-
-# Iniciar Apache
-exec apache2-foreground
+exec php artisan serve --host=0.0.0.0 --port="${PORT:-10000}"
