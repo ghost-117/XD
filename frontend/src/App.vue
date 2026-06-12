@@ -2,6 +2,8 @@
 import { computed, onMounted, reactive, ref } from 'vue'
 import { fallbackCatalog } from './fallbackCatalog'
 
+const API_ORIGIN = normalizeApiOrigin(import.meta.env.VITE_API_URL)
+const DEV_ASSET_ORIGIN = 'http://127.0.0.1:8001'
 const ADMIN_EMAIL = 'Ig1613822@gmail.com'
 const ADMIN_PASSWORD = '12345678'
 const DEFAULT_CATEGORIES = [
@@ -220,6 +222,20 @@ function validEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(email).trim())
 }
 
+function normalizeApiOrigin(url = '') {
+  return String(url).trim().replace(/\/+$/, '').replace(/\/api$/i, '')
+}
+
+function apiEndpoint(path) {
+  return API_ORIGIN ? `${API_ORIGIN}/api${path}` : `/api${path}`
+}
+
+function assetEndpoint(path) {
+  const cleanPath = String(path).replace(/^\/+/, '')
+  const origin = API_ORIGIN || (import.meta.env.DEV ? DEV_ASSET_ORIGIN : '')
+  return origin ? `${origin}/${cleanPath}` : `/${cleanPath}`
+}
+
 function getPasswordStrength(password) {
   const value = String(password)
   let score = 0
@@ -339,7 +355,7 @@ async function api(path, options = {}) {
     : { 'Content-Type': 'application/json', Accept: 'application/json', ...adminHeaders(), ...options.headers }
 
   try {
-    const response = await fetch(`/api${path}`, { ...options, headers, signal: controller.signal })
+    const response = await fetch(apiEndpoint(path), { ...options, headers, signal: controller.signal })
     const payload = await response.json().catch(() => ({}))
 
     if (!response.ok) {
@@ -407,7 +423,7 @@ async function loadAdmin() {
 function imageUrl(path) {
   if (!path) return 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900'
   if (path.startsWith('http') || path.startsWith('blob:') || path.startsWith('data:')) return path
-  return apiOnline.value ? `http://127.0.0.1:8001/${path}` : `/${path}`
+  return apiOnline.value ? assetEndpoint(path) : `/${String(path).replace(/^\/+/, '')}`
 }
 
 function onImageError(event, path) {
