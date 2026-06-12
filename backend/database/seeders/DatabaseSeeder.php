@@ -19,10 +19,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $customer = User::create([
+        $customer = User::updateOrCreate(['email' => 'itzel@example.com'], [
             'name' => 'Itzel',
             'last_name' => 'Judith',
-            'email' => 'itzel@example.com',
             'password' => Hash::make('password'),
             'phone' => '1234567890',
             'address' => 'Apizaco, Tlaxcala',
@@ -30,20 +29,22 @@ class DatabaseSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        User::create([
+        User::updateOrCreate(['email' => 'Ig1613822@gmail.com'], [
             'name' => 'Administrador',
-            'email' => 'Ig1613822@gmail.com',
             'password' => Hash::make('12345678'),
             'role' => 'admin',
             'is_active' => true,
         ]);
 
-        $faldas = Category::create(['name' => 'Faldas']);
-        $blusas = Category::create(['name' => 'Blusas']);
-        $camisetas = Category::create(['name' => 'Camisetas']);
-        $sudaderas = Category::create(['name' => 'Sudaderas']);
-        $pantalones = Category::create(['name' => 'Pantalones']);
-        $accesorios = Category::create(['name' => 'Accesorios']);
+        $categories = collect(['Faldas', 'Blusas', 'Camisetas', 'Sudaderas', 'Pantalones', 'Accesorios'])
+            ->mapWithKeys(fn (string $name) => [$name => Category::updateOrCreate(['name' => $name])]);
+
+        $faldas = $categories['Faldas'];
+        $blusas = $categories['Blusas'];
+        $camisetas = $categories['Camisetas'];
+        $sudaderas = $categories['Sudaderas'];
+        $pantalones = $categories['Pantalones'];
+        $accesorios = $categories['Accesorios'];
 
         $products = collect([
             [$camisetas->id, 'Camisa Oversize Blanca', 'Camisa unisex estilo oversize en tela suave, ideal para outfits callejeros.', 299, 'uploads/1765570943_adidas.jpg', 12, ['M', 'XL'], 'Adidas'],
@@ -61,20 +62,21 @@ class DatabaseSeeder extends Seeder
             [$accesorios->id, 'Cinturón Negro Clásico', 'Cinturón de piel sintética color negro, hebilla metálica.', 150, 'uploads/1765574706_cinturon.jpg', 20, ['Unitalla'], null],
             [$sudaderas->id, 'Hoodie Rosa Pastel', 'Hoodie unisex color rosa pastel con bolsas frontales.', 470, 'uploads/1765574761_hoddie.jpg', 7, ['S', 'M', 'L', 'XL', 'XXL'], null],
             [$faldas->id, 'Falda Plisada Negra', 'Falda juvenil plisada color negro, tela ligera y cómoda.', 320, 'uploads/1765574781_falda.jpg', 6, ['XS', 'S', 'M'], null],
-        ])->map(fn (array $row) => Product::create([
-            'category_id' => $row[0],
-            'name' => $row[1],
-            'description' => $row[2],
-            'price' => $row[3],
-            'image_path' => $row[4],
-            'is_available' => true,
-            'stock' => $row[5],
-            'sizes' => $row[6],
-            'brand' => $row[7],
-        ]));
+        ])->map(fn (array $row) => Product::updateOrCreate(
+            ['name' => $row[1]],
+            [
+                'category_id' => $row[0],
+                'description' => $row[2],
+                'price' => $row[3],
+                'image_path' => $row[4],
+                'is_available' => true,
+                'stock' => $row[5],
+                'sizes' => $row[6],
+                'brand' => $row[7],
+            ],
+        ));
 
-        $order = Order::create([
-            'order_number' => 'SH202606040001',
+        $order = Order::updateOrCreate(['order_number' => 'SH202606040001'], [
             'user_id' => $customer->id,
             'customer_name' => $customer->name,
             'customer_email' => $customer->email,
@@ -86,9 +88,10 @@ class DatabaseSeeder extends Seeder
             'total' => 569,
         ]);
 
-        $order->items()->create([
+        $order->items()->updateOrCreate([
             'product_id' => $products->firstWhere('name', 'Hoodie Rosa Pastel')->id,
             'size' => 'M',
+        ], [
             'quantity' => 1,
             'unit_price' => 470,
             'subtotal' => 470,
