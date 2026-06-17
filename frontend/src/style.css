@@ -317,13 +317,31 @@ p {
   gap: 6px;
 }
 
-.sizes span {
+.sizes button {
+  appearance: none;
+  background: rgba(255, 255, 255, 0.035);
   border: 1px solid rgba(231, 194, 102, 0.28);
   border-radius: 6px;
   color: #ecd99b;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 800;
   min-width: 42px;
   padding: 5px 8px;
   text-align: center;
+}
+
+.sizes button:hover,
+.sizes button:focus-visible {
+  border-color: rgba(242, 207, 114, 0.78);
+  color: #fff7df;
+  outline: none;
+}
+
+.sizes button.active {
+  background: linear-gradient(135deg, #f5d571, #d8a72c);
+  border-color: transparent;
+  color: #120f0a;
 }
 
 .checkout-page {

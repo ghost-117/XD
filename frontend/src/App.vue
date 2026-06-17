@@ -15,10 +15,11 @@ const DEFAULT_CATEGORIES = [
   { id: 6, name: 'Accesorios' },
 ]
 const SIZE_OPTIONS = [
-  { label: 'Ropa XS-S-M-L', value: 'XS,S,M,L' },
-  { label: 'Ropa S-M-L-XL', value: 'S,M,L,XL' },
-  { label: 'Ropa M-L-XL', value: 'M,L,XL' },
-  { label: 'Extendida S-XXL', value: 'S,M,L,XL,XXL' },
+  { label: 'Todas: XS, S, M, L, XL, XXL', value: 'XS,S,M,L,XL,XXL' },
+  { label: 'XS, S, M, L', value: 'XS,S,M,L' },
+  { label: 'S, M, L, XL', value: 'S,M,L,XL' },
+  { label: 'M, L, XL', value: 'M,L,XL' },
+  { label: 'S, M, L, XL, XXL', value: 'S,M,L,XL,XXL' },
   { label: 'Unitalla', value: 'Unitalla' },
 ]
 const PAYMENT_METHODS = ['Tarjeta de credito/debito', 'Transferencia bancaria', 'Pago contra entrega']
@@ -131,6 +132,7 @@ const view = ref('shop')
 const authMode = ref('login')
 const adminTab = ref('products')
 const selectedCategory = ref('Todos')
+const selectedSizes = ref({})
 const search = ref('')
 const loading = ref(false)
 const message = ref('')
@@ -432,10 +434,23 @@ function onImageError(event, path) {
   event.target.src = `/${path}`
 }
 
-function addToCart(product) {
+function productSizes(product) {
+  return Array.isArray(product.sizes) && product.sizes.length ? product.sizes : ['Unitalla']
+}
+
+function selectedProductSize(product) {
+  const sizes = productSizes(product)
+  return sizes.includes(selectedSizes.value[product.id]) ? selectedSizes.value[product.id] : sizes[0]
+}
+
+function selectProductSize(product, size) {
+  selectedSizes.value = { ...selectedSizes.value, [product.id]: size }
+}
+
+function addToCart(product, selectedSize = selectedProductSize(product)) {
   if (!requireLogin('cart')) return
 
-  const size = product.sizes?.[0] || 'Unitalla'
+  const size = selectedSize || 'Unitalla'
   const key = `${product.id}-${size}`
   const existing = cart.value.find((item) => item.key === key)
 
@@ -815,7 +830,15 @@ onMounted(() => {
                 <span>Stock {{ product.stock }}</span>
               </div>
               <div class="sizes">
-                <span v-for="size in product.sizes || ['Unitalla']" :key="size">{{ size }}</span>
+                <button
+                  v-for="size in productSizes(product)"
+                  :key="size"
+                  type="button"
+                  :class="{ active: selectedProductSize(product) === size }"
+                  @click="selectProductSize(product, size)"
+                >
+                  {{ size }}
+                </button>
               </div>
               <button type="button" @click="addToCart(product)">Agregar al carrito</button>
             </div>
