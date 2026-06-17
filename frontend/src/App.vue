@@ -162,7 +162,16 @@ const checkout = reactive({
 const loginForm = reactive({ email: '', password: '' })
 const registerForm = reactive({ name: '', email: '', password: '', phone: '', address: '', terms: false })
 const confirmDialog = reactive({ open: false, title: '', message: '', confirmText: '', action: null })
-const alertDialog = reactive({ open: false, title: '', message: '', type: 'info' })
+const alertDialog = reactive({
+  open: false,
+  title: '',
+  message: '',
+  type: 'info',
+  orderNumber: '',
+  orderTotal: '',
+  orderItems: 0,
+  actionText: 'Entendido',
+})
 const adminSettings = reactive({
   displayName: savedSettings.displayName || 'Administrador SHOP HOLY',
   theme: savedSettings.theme || 'dark',
@@ -208,6 +217,10 @@ function setMessage(text, type = 'info', showModal = ['error', 'warning'].includ
       title: type === 'success' ? 'Operacion completada' : type === 'warning' ? 'Atencion' : 'No se pudo completar',
       message: text,
       type,
+      orderNumber: '',
+      orderTotal: '',
+      orderItems: 0,
+      actionText: 'Entendido',
     })
   }
 }
@@ -273,7 +286,16 @@ function getPasswordStrength(password) {
 }
 
 function closeAlert() {
-  Object.assign(alertDialog, { open: false, title: '', message: '', type: 'info' })
+  Object.assign(alertDialog, {
+    open: false,
+    title: '',
+    message: '',
+    type: 'info',
+    orderNumber: '',
+    orderTotal: '',
+    orderItems: 0,
+    actionText: 'Entendido',
+  })
 }
 
 function persistCart() {
@@ -522,6 +544,8 @@ async function placeOrder() {
   if (!cart.value.length) throw new Error('Agrega al menos una prenda al carrito.')
   if (!validateCheckout()) throw new Error('Revisa los datos de pago y envio.')
 
+  const orderItems = cartCount.value
+  const orderTotal = total.value
   const payload = await api('/orders', {
     method: 'POST',
     body: JSON.stringify({
@@ -553,7 +577,18 @@ async function placeOrder() {
     card_expiry: '',
     card_cvv: '',
   })
-  setMessage(`Pedido ${payload.data.order_number} creado correctamente.`, 'success')
+  const orderNumber = payload.data.order_number
+  setMessage(`Pedido ${orderNumber} creado correctamente.`, 'success')
+  Object.assign(alertDialog, {
+    open: true,
+    title: 'Compra finalizada',
+    message: 'Tu pedido fue recibido correctamente. Te enviaremos el seguimiento por correo cuando sea procesado.',
+    type: 'success',
+    orderNumber,
+    orderTotal: orderTotal.toFixed(2),
+    orderItems,
+    actionText: 'Volver al catalogo',
+  })
   view.value = 'shop'
 }
 
@@ -1118,11 +1153,17 @@ onMounted(() => {
 
     <div v-if="alertDialog.open" class="modal-backdrop" role="dialog" aria-modal="true">
       <section class="modal-card" :class="`modal-${alertDialog.type}`">
-        <p class="eyebrow">{{ alertDialog.type === 'success' ? 'Aviso' : 'Mensaje del sistema' }}</p>
+        <div v-if="alertDialog.type === 'success'" class="success-mark" aria-hidden="true">✓</div>
+        <p class="eyebrow">{{ alertDialog.type === 'success' ? 'SHOP HOLY' : 'Mensaje del sistema' }}</p>
         <h2>{{ alertDialog.title }}</h2>
         <p>{{ alertDialog.message }}</p>
+        <div v-if="alertDialog.orderNumber" class="order-success-summary">
+          <span>Pedido</span><strong>{{ alertDialog.orderNumber }}</strong>
+          <span>Prendas</span><strong>{{ alertDialog.orderItems }}</strong>
+          <span>Total</span><strong>${{ alertDialog.orderTotal }}</strong>
+        </div>
         <div class="modal-actions single">
-          <button type="button" @click="closeAlert">Entendido</button>
+          <button type="button" @click="closeAlert">{{ alertDialog.actionText }}</button>
         </div>
       </section>
     </div>
